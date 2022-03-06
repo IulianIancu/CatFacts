@@ -1,5 +1,6 @@
 package com.iulian.iancu.catfacts.ui.main
 
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -20,8 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.iulian.iancu.catfacts.R
 import com.iulian.iancu.catfacts.data.CatFactsRepository
 import com.iulian.iancu.catfacts.data.CatImageRepository
@@ -73,6 +77,15 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun Content() {
+        val imageLoader = ImageLoader.Builder(this)
+            .components {
+                if (SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }
+            .build()
         CatFactsTheme {
             Surface(color = MaterialTheme.colors.background) {
                 LazyColumn(
@@ -98,7 +111,8 @@ class MainActivity : ComponentActivity() {
                                         placeholder = painterResource(R.drawable.ic_t_pose),
                                         model = it.first,
                                         contentDescription = null,
-                                        alignment = Alignment.Center
+                                        alignment = Alignment.Center,
+                                        imageLoader = imageLoader
                                     )
                                     Text(text = it.second, Modifier.padding(4.dp))
                                 }
