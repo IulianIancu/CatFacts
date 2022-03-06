@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Cat Facts</string>
+    <string name="cat_error_code">Could not herd cats, please try again later</string>
+    <string name="cat_error_network">Server Issues, try again later</string>
 </resources>
